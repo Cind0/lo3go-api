@@ -1,0 +1,23 @@
+{
+  "name": "lo3go-api",
+  "version": "1.0.0",
+  "description": "lo3go api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cind0/lo3go-api.git"
+  },
+  "author": "Cind0",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cind0/lo3go-api/issues"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "joi": "^14.3.1",
+    "mongoose": "^5.9.7"
+  }
+}
