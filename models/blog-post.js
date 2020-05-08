@@ -9,7 +9,7 @@ const BlogPost = mongoose.model('blog-posts' , new mongoose.Schema({
     maxlength: 50
   },
   date: { type: Date, default: Date.now },
-  published: {
+  isPublished: {
     type: Boolean,
     required: true
   },
@@ -34,7 +34,7 @@ const BlogPost = mongoose.model('blog-posts' , new mongoose.Schema({
 function validateBlogPost(blogPost) {
   const schema = {
     title: Joi.string().min(3).max(50).required(),
-    published: Joi.bool().required().error(() => {
+    isPublished: Joi.bool().required().error(() => {
       return {
         message: 'error_msg_published_required',
       };
