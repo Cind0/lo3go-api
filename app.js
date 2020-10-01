@@ -1,9 +1,18 @@
+const config = require('config');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 
 // Include blog routes 
 const blog = require('./routes/blog');
+const users = require('./routes/users');
+const auth = require('./routes/auth');
+
+if (!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  process.exit(1);
+};
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/lo3go', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -14,9 +23,12 @@ mongoose.connect('mongodb://localhost/lo3go', { useNewUrlParser: true, useUnifie
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use(cors())
+
 // Init blog routes
 app.use('/api/blog-posts', blog);
-
+app.use('/api/users', users);
+app.use('/api/auth', auth);
 
 
 const port = process.env.PORT || 3001;

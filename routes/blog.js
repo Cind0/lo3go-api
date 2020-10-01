@@ -1,4 +1,5 @@
-const {BlogPost, validateBlogPost} = require('../models/blog-post'); 
+const {BlogPost, validateBlogPost} = require('../models/blog-post');
+const auth = require('../middleware/auth');
 const mongoose = require('mongoose');
 const router = require('express').Router();
 
@@ -14,11 +15,12 @@ router.get('/', async (req, res) => {
   res.send(blogPost);
 });
 
-router.post('/', async (req, res) => {
+// Save blog post
+router.post('/', auth, async (req, res) => {
   const { error } = validateBlogPost(req.body);
   if ( error ) return res.status(400).send( error.details[0].message );
-  
-  let blogPost = new BlogPost ({
+
+  const blogPost = new BlogPost ({
     title: req.body.title,
     isPublished: req.body.isPublished,
     time: req.body.time,
@@ -26,15 +28,16 @@ router.post('/', async (req, res) => {
     version: req.body.version,
   });
 
-  blogPost = await blogPost.save();
+  await blogPost.save();
   res.send(blogPost);
 });
 
 // Get blog post data
 router.get('/:id', async (req, res) => {
   try {
-    const blogPost = await BlogPost.findById(req.params.id)
-    .select({ time: 0, isPublished: 0, blocks: 1, version: 0, __v: 0 });
+    const blogPost = await BlogPost
+    .findById(req.params.id)
+    .select({blocks: 1});
 
     res.send(blogPost);
   } catch (error) {
@@ -43,12 +46,16 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update blog post
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
+
   const { error } = validateBlogPost(req.body);
   if ( error ) return res.status(400).send( error.details[0].message );
-
+  
+  // const blog = await BlogPost.findById(req.body.blogId);
+  // if (!`blog`) return res.status(400).send('Invalid blog.');
+  
   try {
-    const blogPost = await BlogPost.findByIdAndUpdate(req.params.id, { 
+    const blogPost = await BlogPost.findByIdAndUpdate(req.params.id, {
       title: req.body.title,
       isPublished: req.body.isPublished,
       time: req.body.time,

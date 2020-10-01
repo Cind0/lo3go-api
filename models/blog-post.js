@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
+// const Joi.objectId = require('joi-objectid')(Joi);
 
-const BlogPost = mongoose.model('blog-posts' , new mongoose.Schema({
+const BlogPost = mongoose.model('blog-post' , new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -36,7 +37,7 @@ function validateBlogPost(blogPost) {
     title: Joi.string().min(3).max(50).required(),
     isPublished: Joi.bool().required().error(() => {
       return {
-        message: 'error_msg_published_required',
+        message: 'error_msg_blog_post_published_required',
       };
     }),
     time: Joi.number().required(),
