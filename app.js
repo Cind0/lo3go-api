@@ -14,6 +14,8 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
+mongoose.set('useFindAndModify', false);
+
 // Connect to DB
 mongoose
   .connect("mongodb://localhost/lo3go", {
