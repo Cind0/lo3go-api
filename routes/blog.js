@@ -72,7 +72,13 @@ router.post("/", auth, async (req, res) => {
 // Get blog post data
 router.get("/:id", async (req, res) => {
   try {
-    const blogPost = await BlogPost.findById(req.params.id);
+    const blogPost = await BlogPost.findOne({
+      _id: req.params.id,
+      isPublished: true,
+    });
+    if (!blogPost) {
+      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+    }
     return res.send(blogPost);
   } catch (error) {
     return res.status(404).json({ error: "error_msg_blog_post_not_found" });
