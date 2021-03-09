@@ -14,7 +14,9 @@ if (!config.get("jwtPrivateKey")) {
   process.exit(1);
 }
 
-mongoose.set('useFindAndModify', false);
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useFindAndModify", false);
+mongoose.set("useCreateIndex", true);
 
 // Connect to DB
 mongoose
@@ -32,7 +34,7 @@ app.use("/public", express.static("public"));
 app.use(cors());
 
 // Init blog routes
-app.use("/api/blog-posts", blog);
+app.use("/api/blog", blog);
 // app.use("/api/users", users);
 app.use("/api/auth", auth);
 

@@ -24,6 +24,34 @@ router.get("/all-published", async (req, res) => {
   }
 });
 
+router.get("/latest", async (req, res) => {
+  try {
+    const blogPost = await BlogPost.findOne({ isPublished: true })
+      .sort({ pubDate: -1 })
+      .select({ time: 0, version: 0, __v: 0 }); // exclude time, block, version > (editor.js), and __v
+
+    return res.send(blogPost);
+  } catch (error) {
+    return res.status(500).json({ error: "error_msg_blog_post_not_found" });
+  }
+});
+
+// Get blog post data
+router.get("/find/:id", async (req, res) => {
+  try {
+    const blogPost = await BlogPost.findOne({
+      _id: req.params.id,
+      isPublished: true,
+    });
+    if (!blogPost) {
+      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+    }
+    return res.send(blogPost);
+  } catch (error) {
+    return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+  }
+});
+
 router.get("/all", auth, async (req, res) => {
   try {
     const blogPosts = await BlogPost.find()
@@ -35,15 +63,17 @@ router.get("/all", auth, async (req, res) => {
   }
 });
 
-router.get("/latest", async (req, res) => {
+router.get("/toedit/:id", auth, async (req, res) => {
   try {
-    const blogPost = await BlogPost.findOne({ isPublished: true })
-      .sort({ pubDate: -1 })
-      .select({ time: 0, version: 0, __v: 0 }); // exclude time, block, version > (editor.js), and __v
-
+    const blogPost = await BlogPost.findOne({
+      _id: req.params.id,
+    });
+    if (!blogPost) {
+      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+    }
     return res.send(blogPost);
   } catch (error) {
-    return res.status(500).json({ error: "error_msg_blog_post_not_found" });
+    return res.status(404).json({ error: "error_msg_blog_post_not_found" });
   }
 });
 
@@ -66,22 +96,6 @@ router.post("/", auth, async (req, res) => {
     return res.send(blogPost);
   } catch (error) {
     return res.status(500).json({ error: "error_msg_something_went_wrong" });
-  }
-});
-
-// Get blog post data
-router.get("/:id", async (req, res) => {
-  try {
-    const blogPost = await BlogPost.findOne({
-      _id: req.params.id,
-      isPublished: true,
-    });
-    if (!blogPost) {
-      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
-    }
-    return res.send(blogPost);
-  } catch (error) {
-    return res.status(404).json({ error: "error_msg_blog_post_not_found" });
   }
 });
 
@@ -153,7 +167,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.post("/uploadImg", auth, upload.single("image"), (req, res) => {
   try {
-    return res.status(200).send({
+    return res.status(200).json({
       success: 1,
       file: {
         url: req.protocol + "://" + req.get("host") + "/" + req.file.path,
