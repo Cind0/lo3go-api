@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
 
+const cleanBlogImages = require("./utils/cleanBlogImages");
+
 // Include blog routes
 const blog = require("./routes/blog");
 // const users = require("./routes/users");
@@ -37,6 +39,8 @@ app.use(cors());
 app.use("/api/blog", blog);
 // app.use("/api/users", users);
 app.use("/api/auth", auth);
+
+setInterval(cleanBlogImages, 1000 * 60 * 60 * 24 * 7);
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Listening on port ${port}`));

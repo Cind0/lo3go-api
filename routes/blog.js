@@ -139,7 +139,8 @@ router.delete("/:id", auth, async (req, res) => {
   }
 
   try {
-    await BlogPost.findByIdAndDelete(req.params.id);
+    const blogPost = await BlogPost.findByIdAndDelete(req.params.id);
+    blogPost.deleteBlogImages(blogPost);
     return res.json({ status: "blog_post_deleted" });
   } catch (error) {
     return res.json({ error: "error_msg_something_went_wrong" });
@@ -148,7 +149,7 @@ router.delete("/:id", auth, async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/");
+    cb(null, "public/blog");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
