@@ -29,13 +29,14 @@ mongoose
   .then(() => console.log("Connected to MongoDB..."))
   .catch(() => console.error("Could not connect to MongoDB..."));
 
-// include build-in middleware - bodyParser
+// include build-in middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// expose folder for pictures
 app.use("/public", express.static("public"));
 app.use(cors());
 
-// Init blog routes
+// Init routes
 app.use("/api/blog", blog);
 // app.use("/api/users", users);
 app.use("/api/auth", auth);

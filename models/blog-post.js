@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const fs = require("fs");
 const path = require("path");
-// const Joi.objectId = require('joi-objectid')(Joi);
 
 const blogSchema = new mongoose.Schema({
   title: {

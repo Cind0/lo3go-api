@@ -13,6 +13,11 @@ router.post("/", async (req, res) => {
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) return res.status(400).json("Invalid passowrd!");
 
+  if (!user.isAdmin)
+    return res
+      .status(403)
+      .json("This account has no administrative privileges!");
+
   const token = user.generateAuthToken();
 
   res.json(token);

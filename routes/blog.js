@@ -18,7 +18,7 @@ router.get("/all-published", async (req, res) => {
         version: 0,
         __v: 0,
       }); // exclude time, block, version > (editor.js), and __v
-    return res.send(blogPosts);
+    return res.json(blogPosts);
   } catch (error) {
     return res.status(500).json({ error: "error_msg_something_went_wrong" });
   }
@@ -30,9 +30,9 @@ router.get("/latest", async (req, res) => {
       .sort({ pubDate: -1 })
       .select({ time: 0, version: 0, __v: 0 }); // exclude time, block, version > (editor.js), and __v
 
-    return res.send(blogPost);
+    return res.json(blogPost);
   } catch (error) {
-    return res.status(500).json({ error: "error_msg_blog_post_not_found" });
+    return res.status(404).json({ error: "error_msg_blog_post_not_found" });
   }
 });
 
@@ -43,10 +43,10 @@ router.get("/find/:id", async (req, res) => {
       _id: req.params.id,
       isPublished: true,
     });
-    if (!blogPost) {
-      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
-    }
-    return res.send(blogPost);
+    // if (!blogPost) {
+    //   return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+    // }
+    return res.json(blogPost);
   } catch (error) {
     return res.status(404).json({ error: "error_msg_blog_post_not_found" });
   }
@@ -57,7 +57,7 @@ router.get("/all", auth, async (req, res) => {
     const blogPosts = await BlogPost.find()
       .sort({ date: -1 })
       .select({ time: 0, blocks: 0, date: 0, version: 0, __v: 0 }); // exclude time, block, version > (editor.js), and __v
-    return res.send(blogPosts);
+    return res.json(blogPosts);
   } catch (error) {
     return res.status(500).json({ error: "error_msg_something_went_wrong" });
   }
@@ -68,10 +68,10 @@ router.get("/toedit/:id", auth, async (req, res) => {
     const blogPost = await BlogPost.findOne({
       _id: req.params.id,
     });
-    if (!blogPost) {
-      return res.status(404).json({ error: "error_msg_blog_post_not_found" });
-    }
-    return res.send(blogPost);
+    // if (!blogPost) {
+    //   return res.status(404).json({ error: "error_msg_blog_post_not_found" });
+    // }
+    return res.json(blogPost);
   } catch (error) {
     return res.status(404).json({ error: "error_msg_blog_post_not_found" });
   }
@@ -93,7 +93,7 @@ router.post("/", auth, async (req, res) => {
     });
 
     await blogPost.save();
-    return res.send(blogPost);
+    return res.json(blogPost);
   } catch (error) {
     return res.status(500).json({ error: "error_msg_something_went_wrong" });
   }
@@ -125,7 +125,7 @@ router.put("/:id", auth, async (req, res) => {
         new: true,
       }
     );
-    return res.send(blogPost);
+    return res.json(blogPost);
   } catch (error) {
     return res.status(500).json({ error: "error_msg_something_went_wrong" });
   }

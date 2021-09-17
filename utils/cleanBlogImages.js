@@ -1,4 +1,3 @@
-var path = require("path");
 var fs = require("fs");
 const { BlogPost } = require("../models/blog-post");
 
@@ -32,7 +31,6 @@ module.exports = async function cleanBlogImages() {
       });
 
       uploadedImages.forEach((img) => {
-        console.log(img);
         if (!blogImages.includes(img)) {
           imagesToDelete.push(img);
         }
