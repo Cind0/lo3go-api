@@ -1,3 +1,4 @@
 {
-  "jwtPrivateKey": "lo3go_jwtPrivateKey"
+  "jwtPrivateKey": "lo3go_jwtPrivateKey",
+  "origin": "http://localhost:9000"
 }

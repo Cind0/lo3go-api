@@ -34,7 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // expose folder for pictures
 app.use("/public", express.static("public"));
-app.use(cors());
+app.use(cors({ origin: config.get("origin") }));
 
 // Init routes
 app.use("/api/blog", blog);

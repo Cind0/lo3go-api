@@ -1,4 +1,8 @@
-const { BlogPost, validateBlogPost } = require("../models/blog-post");
+const {
+  BlogPost,
+  validateBlogPost,
+  createTitleSlug,
+} = require("../models/blog-post");
 const auth = require("../middleware/auth");
 const router = require("express").Router();
 const multer = require("multer");
@@ -85,6 +89,7 @@ router.post("/", auth, async (req, res) => {
   try {
     const blogPost = new BlogPost({
       title: req.body.title,
+      titleSlug: createTitleSlug(req.body.title),
       isPublished: req.body.isPublished,
       pubDate: req.body.pubDate,
       time: req.body.time,
@@ -140,7 +145,7 @@ router.delete("/:id", auth, async (req, res) => {
 
   try {
     const blogPost = await BlogPost.findByIdAndDelete(req.params.id);
-    blogPost.deleteBlogImages(blogPost);
+    await blogPost.deleteBlogImages(blogPost);
     return res.json({ status: "blog_post_deleted" });
   } catch (error) {
     return res.json({ error: "error_msg_something_went_wrong" });
